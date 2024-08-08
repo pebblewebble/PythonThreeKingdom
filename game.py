@@ -16,16 +16,15 @@ BLACK = (0, 0, 0)
 SIZE = 10
 SPEED = 20
 
-
 class Point(pygame.Rect):
-    def __init__(self, x, y, size):
+    def __init__(self, x, y, size,color):
         super().__init__(x,y,size,size)
+        self.color=color;
     def my_own_update(self,x,y,size):
         self.x=x
         self.y=y
         if size is not None:
             self.width=self.height=size
-
 
 class SnakeGame:
     def __init__(self, w=640, h=480):
@@ -36,25 +35,25 @@ class SnakeGame:
         self.clock = pygame.time.Clock()
 
         self.reds = [
-            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10)
+            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, RED)
         ]
         self.blues = [
-            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10)
+            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, BLUE)
         ]
         self.greens = [
-            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10)
+            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, GREEN)
         ]
         self.food = [
-            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10)
+            Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE)
         ]
         for x in range(50):
             self.food.append(
-                Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10)
+                Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE)
             )
 
     def move_points(self):
         def move_point(point):
-            x, y, size = point.x, point.y, point.width
+            x, y, size, color = point.x, point.y, point.width, point.color
             direction = random.randint(0, 3)
             match direction:
                 case 0:
@@ -67,14 +66,19 @@ class SnakeGame:
                     y -= 1
             x = x % self.w
             y = y % self.h
-            new_point = Point(x, y, size)
+            new_point = Point(x, y, size,color)
             #Creates an array to store the food that has to be removed later on
             collided_food = [food for food in self.food if new_point.colliderect(food)]
             if collided_food:
                 size += 5
                 #Keep the food that is not in the array that we just created
                 self.food = [f for f in self.food if f not in collided_food]
-    
+                if color==RED:
+                    self.reds.append(Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,point.color))
+                if color==GREEN:
+                    self.greens.append(Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,point.color))
+                if color==BLUE:
+                    self.blues.append(Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,point.color))
             point.my_own_update(x, y, size)
             return point
 
