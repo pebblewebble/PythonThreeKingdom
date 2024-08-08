@@ -27,7 +27,7 @@ class Point(pygame.Rect):
             self.width=self.height=size
 
 class SnakeGame:
-    def __init__(self, w=640, h=480):
+    def __init__(self, w=1920, h=1080):
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -46,7 +46,9 @@ class SnakeGame:
         self.food = [
             Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE)
         ]
-        for x in range(50):
+        foodToAdd=int(((self.w*self.h)/5)/1000)
+        for x in range(foodToAdd):
+            print("added 1 food")
             self.food.append(
                 Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE)
             )
