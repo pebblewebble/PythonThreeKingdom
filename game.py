@@ -34,7 +34,7 @@ class SnakeGame:
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption("Three Kingdom")
         self.clock = pygame.time.Clock()
-
+    
         self.reds = [
             Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, RED)
         ]
@@ -47,6 +47,7 @@ class SnakeGame:
         self.food = [
             Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE)
         ]
+        self.points=[self.reds,self.blues,self.greens,self.food]
         foodToAdd=int(((self.w*self.h)/5)/1000)
         for x in range(foodToAdd):
             print("added 1 food")
@@ -54,14 +55,17 @@ class SnakeGame:
                 Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE)
             )
 
-        self.grid=defaultdict(set)
+        self.grid={}
         self.update_grid()
+
     def update_grid(self):
         self.grid.clear()
-        for color, points in self.points.items():
-            for point in points:
+        for color in self.points:
+            for point in color:
                 cell=(point.x//CELL_SIZE,point.y//CELL_SIZE)
-                self.grid[cell].add(point)
+                if cell not in self.grid:
+                    self.grid[cell] = [] 
+                self.grid[cell].append(point)
 
     def move_points(self):
         def move_point(point):
