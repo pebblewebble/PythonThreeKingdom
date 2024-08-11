@@ -1,7 +1,7 @@
 import pygame
 import random
 from enum import Enum
-from collections import namedtuple, defaultdict
+# from collections import namedtuple
 
 pygame.init()
 
@@ -58,8 +58,10 @@ class SnakeGame:
         ]
         self.points = [self.reds, self.blues, self.greens, self.food]
         foodToAdd = int(((self.w * self.h) / 5) / 1000)
+        self.foodCounter = 1
         for x in range(foodToAdd):
-            print("added 1 food")
+            self.foodCounter+=1
+            print("Added 1 food | Total Food on Screen = "+str(self.foodCounter))
             self.food.append(
                 Point(
                     random.randint(0, self.w - 1),
@@ -110,7 +112,7 @@ class SnakeGame:
             
             for grid_point in self.grid[current_cell]:
                 # Creates an array to store the food that has to be removed later on
-                if new_point.colliderect(grid_point):
+                if new_point.colliderect(grid_point) and grid_point!=point:
                     if grid_point in self.food:
                         collided_food.append(grid_point)
                     elif grid_point in self.reds:
@@ -119,25 +121,36 @@ class SnakeGame:
                         collided_greens.append(grid_point)
                     elif grid_point in self.blues:
                         collided_blues.append(grid_point)
-                #
-                # collided_food = [food for food in self.food if new_point.colliderect(food)]
-                # if collided_food:
-                #     size += 5
-                #     #Keep the food that is not in the array that we just created
-                #     self.food = [f for f in self.food if f not in collided_food]
-                #     if color==RED:
-                #         self.reds.append(Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,point.color))
-                #     if color==GREEN:
-                #         self.greens.append(Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,point.color))
-                #     if color==BLUE:
-                #         self.blues.append(Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,point.color))
-
+               
             if collided_food:
-                size += 5
                 # Keep the food that is not in the array that we just created
                 for food in collided_food:
+                    size += 5
                     self.food.remove(food)
+                    print("A food has been eaten! | Total Food on Screen = "+str(len(self.food))+" | Eater Color = "+str(color))
                 self.spawn_point(color)
+            if collided_reds:
+               for j in collided_reds:
+                   if j.color!=color:
+                       size+=5 
+                       print("A red has been eaten! | Total Reds on Screen = "+str(len(self.reds))+" | Eater Color = "+str(color))
+                       self.reds.remove(j)
+               self.spawn_point(color)
+            if collided_blues:
+                for j in collided_blues:
+                    if j.color!=color:
+                        size+=5
+                        print("A blue has been eaten!| Total Blues on Screen = "+str(len(self.blues))+" | Eater Color = "+str(color))
+                        self.blues.remove(j)
+                self.spawn_point(color)
+            if collided_greens:
+                for j in collided_greens:
+                    if j.color!=color:
+                        size+=5
+                        print("A green has been eaten!| Total Greens on Screen = "+str(len(self.greens))+" | Eater Color = "+str(color))
+                        self.greens.remove(j)
+                self.spawn_point(color)
+
 
             if current_cell != previous_cell:
                 self.update_grid()
