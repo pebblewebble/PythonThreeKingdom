@@ -76,91 +76,89 @@ class SnakeGame:
 
     def update_grid(self):
         self.grid.clear()
-        for color in self.points:
-            for point in color:
+        for point_list in [self.reds, self.blues, self.greens, self.food]:
+            for point in point_list:
                 cell = (point.x // CELL_SIZE, point.y // CELL_SIZE)
                 if cell not in self.grid:
                     self.grid[cell] = []
                 self.grid[cell].append(point)
-
     def move_points(self):
-        def move_point(point):
-            x, y, size, color = point.x, point.y, point.width, point.color
-            direction = random.randint(0, 3)
-            match direction:
-                case 0:
-                    x -= 1
-                case 1:
-                    x += 1
-                case 2:
-                    y += 1
-                case 3:
-                    y -= 1
-            x = x % self.w
-            y = y % self.h
-            new_point = Point(x, y, size, color)
-
-            current_cell = (x // CELL_SIZE, y // CELL_SIZE)
-            if current_cell not in self.grid:
-                self.grid[current_cell]=[]
-            previous_cell = (point.x // CELL_SIZE, point.y // CELL_SIZE)
-
-            collided_food = []
-            collided_reds = []
-            collided_blues = []
-            collided_greens = []
-            
-            for grid_point in self.grid[current_cell]:
-                # Creates an array to store the food that has to be removed later on
-                if new_point.colliderect(grid_point) and grid_point!=point:
-                    if grid_point in self.food:
-                        collided_food.append(grid_point)
-                    elif grid_point in self.reds:
-                        collided_reds.append(grid_point)
-                    elif grid_point in self.greens:
-                        collided_greens.append(grid_point)
-                    elif grid_point in self.blues:
-                        collided_blues.append(grid_point)
-               
-            if collided_food:
-                # Keep the food that is not in the array that we just created
-                for food in collided_food:
-                    size += 5
-                    self.food.remove(food)
-                    print("A food has been eaten! | Total Food on Screen = "+str(len(self.food))+" | Eater Color = "+str(color))
-                self.spawn_point(color)
-            if collided_reds:
-               for j in collided_reds:
-                   if j.color!=color:
-                       size+=5 
-                       print("A red has been eaten! | Total Reds on Screen = "+str(len(self.reds))+" | Eater Color = "+str(color))
-                       self.reds.remove(j)
-               self.spawn_point(color)
-            if collided_blues:
-                for j in collided_blues:
+         def move_point(point):
+             x, y, size, color = point.x, point.y, point.width, point.color
+             direction = random.randint(0, 3)
+             match direction:
+                 case 0:
+                     x -= 1
+                 case 1:
+                     x += 1
+                 case 2:
+                     y += 1
+                 case 3:
+                     y -= 1
+             x = x % self.w
+             y = y % self.h
+             new_point = Point(x, y, size, color)
+    
+             current_cell = (x // CELL_SIZE, y // CELL_SIZE)
+             if current_cell not in self.grid:
+                 self.grid[current_cell]=[]
+             previous_cell = (point.x // CELL_SIZE, point.y // CELL_SIZE)
+    
+             collided_food = []
+             collided_reds = []
+             collided_blues = []
+             collided_greens = []
+             
+             for grid_point in self.grid[current_cell]:
+                 # Creates an array to store the food that has to be removed later on
+                 if new_point.colliderect(grid_point) and grid_point!=point:
+                     if grid_point in self.food:
+                         collided_food.append(grid_point)
+                     elif grid_point in self.reds:
+                         collided_reds.append(grid_point)
+                     elif grid_point in self.greens:
+                         collided_greens.append(grid_point)
+                     elif grid_point in self.blues:
+                         collided_blues.append(grid_point)
+                
+             if collided_food:
+                 # Keep the food that is not in the array that we just created
+                 for food in collided_food:
+                     size += 5
+                     self.food.remove(food)
+                     print("A food has been eaten! | Total Food on Screen = "+str(len(self.food))+" | Eater Color = "+str(color))
+                     self.spawn_point(color)
+             if collided_reds:
+                for j in collided_reds:
                     if j.color!=color:
-                        size+=5
-                        print("A blue has been eaten!| Total Blues on Screen = "+str(len(self.blues))+" | Eater Color = "+str(color))
-                        self.blues.remove(j)
-                self.spawn_point(color)
-            if collided_greens:
-                for j in collided_greens:
-                    if j.color!=color:
-                        size+=5
-                        print("A green has been eaten!| Total Greens on Screen = "+str(len(self.greens))+" | Eater Color = "+str(color))
-                        self.greens.remove(j)
-                self.spawn_point(color)
-
-
-            if current_cell != previous_cell:
-                self.update_grid()
-            point.my_own_update(x, y, size)
-            return point
-
-        self.reds = [move_point(p) for p in self.reds]
-        self.blues = [move_point(p) for p in self.blues]
-        self.greens = [move_point(p) for p in self.greens]
-
+                        size+=5 
+                        print("A red has been eaten! | Total Reds on Screen = "+str(len(self.reds))+" | Eater Color = "+str(color))
+                        self.reds.remove(j)
+                        self.spawn_point(color)
+             if collided_blues:
+                 for j in collided_blues:
+                     if j.color!=color:
+                         size+=5
+                         print("A blue has been eaten!| Total Blues on Screen = "+str(len(self.blues))+" | Eater Color = "+str(color))
+                         self.blues.remove(j)
+                         self.spawn_point(color)
+             if collided_greens:
+                 for j in collided_greens:
+                     if j.color!=color:
+                         size+=5
+                         print("A green has been eaten!| Total Greens on Screen = "+str(len(self.greens))+" | Eater Color = "+str(color))
+                         self.greens.remove(j)
+                         self.spawn_point(color)
+    
+    
+             point.my_own_update(x, y, size)
+             return point
+    
+         self.reds = [move_point(p) for p in self.reds]
+         self.blues = [move_point(p) for p in self.blues]
+         self.greens = [move_point(p) for p in self.greens]
+         self.update_grid()
+    
     def spawn_point(self, color):
         if color == RED:
             self.reds.append(
