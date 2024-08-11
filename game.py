@@ -1,7 +1,7 @@
 import pygame
 import random
 from enum import Enum
-from collections import namedtuple
+from collections import namedtuple,defaultdict
 
 pygame.init()
 
@@ -15,6 +15,7 @@ BLACK = (0, 0, 0)
 
 SIZE = 10
 SPEED = 20
+CELL_SIZE=50
 
 class Point(pygame.Rect):
     def __init__(self, x, y, size,color):
@@ -27,7 +28,7 @@ class Point(pygame.Rect):
             self.width=self.height=size
 
 class SnakeGame:
-    def __init__(self, w=1920, h=1080):
+    def __init__(self, w=640, h=480):
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -52,6 +53,15 @@ class SnakeGame:
             self.food.append(
                 Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE)
             )
+
+        self.grid=defaultdict(set)
+        self.update_grid()
+    def update_grid(self):
+        self.grid.clear()
+        for color, points in self.points.items():
+            for point in points:
+                cell=(point.x//CELL_SIZE,point.y//CELL_SIZE)
+                self.grid[cell].add(point)
 
     def move_points(self):
         def move_point(point):
