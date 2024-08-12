@@ -10,6 +10,8 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
+YELLOW= (255,255,0)
+
 BLACK = (0, 0, 0)
 
 
@@ -37,6 +39,7 @@ class SnakeGame:
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption("Three Kingdom")
         self.clock = pygame.time.Clock()
+        self.player_direction=0
 
         self.reds = [
             Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, RED)
@@ -56,8 +59,11 @@ class SnakeGame:
                 random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, WHITE
             )
         ]
-        self.points = [self.reds, self.blues, self.greens, self.food]
-        foodToAdd = int(((self.w * self.h) / 5) / 1000)
+        self.player=[
+                Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,YELLOW)
+                ]
+        self.points = [self.reds, self.blues, self.greens, self.food,self.player]
+        foodToAdd = int(((self.w * self.h) / 5) / 1000 / 5000)
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter+=1
@@ -83,9 +89,14 @@ class SnakeGame:
                     self.grid[cell] = []
                 self.grid[cell].append(point)
     def move_points(self):
-         def move_point(point):
+         def move_point(point,player):
              x, y, size, color = point.x, point.y, point.width, point.color
              direction = random.randint(0, 3)
+             if player and self.player_direction==-1:
+                 return point
+             if player:
+                 direction=self.player_direction
+                 self.player_direction=-1
              match direction:
                  case 0:
                      x -= 1
@@ -99,10 +110,9 @@ class SnakeGame:
              y = y % self.h
              new_point = Point(x, y, size, color)
     
-             current_cell = (x // CELL_SIZE, y // CELL_SIZE)
+             current_cell = (point.x // CELL_SIZE, point.y // CELL_SIZE)
              if current_cell not in self.grid:
                  self.grid[current_cell]=[]
-             previous_cell = (point.x // CELL_SIZE, point.y // CELL_SIZE)
     
              collided_food = []
              collided_reds = []
@@ -150,13 +160,13 @@ class SnakeGame:
                          self.greens.remove(j)
                          self.spawn_point(color)
     
-    
              point.my_own_update(x, y, size)
              return point
     
-         self.reds = [move_point(p) for p in self.reds]
-         self.blues = [move_point(p) for p in self.blues]
-         self.greens = [move_point(p) for p in self.greens]
+         # self.reds = [move_point(p,False) for p in self.reds]
+         # self.blues = [move_point(p,False) for p in self.blues]
+         # self.greens = [move_point(p, False) for p in self.greens]
+         self.player = [move_point(p,True) for p in self.player]
          self.update_grid()
     
     def spawn_point(self, color):
@@ -189,6 +199,25 @@ class SnakeGame:
             )
 
     def play_step(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_LEFT:
+                    self.player_direction=0
+                    print("0")
+                elif event.key==pygame.K_RIGHT:
+                    self.player_direction=1
+                    print("1")
+                elif event.key==pygame.K_UP:
+                    self.player_direction=2
+                    print("2")
+                elif event.key==pygame.K_DOWN:
+                    self.player_direction=3
+                    print("3")
+                print("detected")
+
         self.move_points()
         self.update_ui()
 
@@ -202,6 +231,8 @@ class SnakeGame:
             pygame.draw.rect(self.display, GREEN, point)
         for point in self.food:
             pygame.draw.rect(self.display, WHITE, point)
+        for point in self.player:
+            pygame.draw.rect(self.display, YELLOW, point)
         pygame.display.update()
 
 
@@ -209,7 +240,4 @@ if __name__ == "__main__":
     game = SnakeGame()
     # Game Loop
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                break
         game.play_step()
