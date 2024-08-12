@@ -82,7 +82,7 @@ class SnakeGame:
 
     def update_grid(self):
         self.grid.clear()
-        for point_list in [self.reds, self.blues, self.greens, self.food]:
+        for point_list in [self.reds, self.blues, self.greens, self.food, self.player]:
             for point in point_list:
                 cell = (point.x // CELL_SIZE, point.y // CELL_SIZE)
                 if cell not in self.grid:
@@ -97,7 +97,7 @@ class SnakeGame:
                  return point
              if player:
                  direction=self.player_direction
-                 movement_speed=10
+                 movement_speed=5
                  self.player_direction=-1
              match direction:
                  case 0:
@@ -205,20 +205,24 @@ class SnakeGame:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            elif event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_LEFT:
-                    self.player_direction=0
-                    print("0")
-                elif event.key==pygame.K_RIGHT:
-                    self.player_direction=1
-                    print("1")
-                elif event.key==pygame.K_DOWN:
-                    self.player_direction=2
-                    print("2")
-                elif event.key==pygame.K_UP:
-                    self.player_direction=3
-                    print("3")
-                print("detected")
+            # elif event.type==pygame.KEYDOWN:
+            #     if event.key==pygame.K_LEFT:
+            #         self.player_direction=0
+            #     elif event.key==pygame.K_RIGHT:
+            #         self.player_direction=1
+            #     elif event.key==pygame.K_DOWN:
+            #         self.player_direction=2
+            #     elif event.key==pygame.K_UP:
+            #         self.player_direction=3
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.player_direction = 0
+        elif keys[pygame.K_RIGHT]:
+            self.player_direction = 1
+        elif keys[pygame.K_DOWN]:
+            self.player_direction = 2
+        elif keys[pygame.K_UP]:
+            self.player_direction = 3
 
         self.move_points()
         self.update_ui()
