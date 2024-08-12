@@ -63,7 +63,7 @@ class SnakeGame:
                 Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,YELLOW)
                 ]
         self.points = [self.reds, self.blues, self.greens, self.food,self.player]
-        foodToAdd = int(((self.w * self.h) / 5) / 1000 / 5000)
+        foodToAdd = int(((self.w * self.h) / 5) / 1000 )
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter+=1
@@ -165,9 +165,9 @@ class SnakeGame:
              point.my_own_update(x, y, size)
              return point
     
-         # self.reds = [move_point(p,False) for p in self.reds]
-         # self.blues = [move_point(p,False) for p in self.blues]
-         # self.greens = [move_point(p, False) for p in self.greens]
+         self.reds = [move_point(p,False) for p in self.reds]
+         self.blues = [move_point(p,False) for p in self.blues]
+         self.greens = [move_point(p, False) for p in self.greens]
          self.player = [move_point(p,True) for p in self.player]
          self.update_grid()
     
