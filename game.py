@@ -92,20 +92,22 @@ class SnakeGame:
          def move_point(point,player):
              x, y, size, color = point.x, point.y, point.width, point.color
              direction = random.randint(0, 3)
+             movement_speed=1
              if player and self.player_direction==-1:
                  return point
              if player:
                  direction=self.player_direction
+                 movement_speed=10
                  self.player_direction=-1
              match direction:
                  case 0:
-                     x -= 1
+                     x -= movement_speed 
                  case 1:
-                     x += 1
+                     x += movement_speed 
                  case 2:
-                     y += 1
+                     y += movement_speed 
                  case 3:
-                     y -= 1
+                     y -= movement_speed
              x = x % self.w
              y = y % self.h
              new_point = Point(x, y, size, color)
@@ -210,10 +212,10 @@ class SnakeGame:
                 elif event.key==pygame.K_RIGHT:
                     self.player_direction=1
                     print("1")
-                elif event.key==pygame.K_UP:
+                elif event.key==pygame.K_DOWN:
                     self.player_direction=2
                     print("2")
-                elif event.key==pygame.K_DOWN:
+                elif event.key==pygame.K_UP:
                     self.player_direction=3
                     print("3")
                 print("detected")
