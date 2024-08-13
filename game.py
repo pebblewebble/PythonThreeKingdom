@@ -3,6 +3,10 @@ import random
 from enum import Enum
 # from collections import namedtuple
 
+#TO DO LIST
+# 1. I think the grid cell thing might be messing up with some collision where it's not entirely detecting it properly
+# 2. Reinforcement Learning later on
+
 pygame.init()
 
 # Colors
