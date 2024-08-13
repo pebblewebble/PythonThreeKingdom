@@ -6,6 +6,8 @@ from enum import Enum
 #TO DO LIST
 # 1. I think the grid cell thing might be messing up with some collision where it's not entirely detecting it properly
 # 2. Reinforcement Learning later on
+# 3. I think it sometimes doesn't eat other rect, especially when two rects colliding are moving is because 
+# I am redrwaing them every frame, so according to reddit, it is better to just use the move() method for rects.
 
 pygame.init()
 
@@ -37,7 +39,7 @@ class Point(pygame.Rect):
 
 
 class SnakeGame:
-    def __init__(self, w=1920, h=1080):
+    def __init__(self, w=700, h=700):
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -175,7 +177,7 @@ class SnakeGame:
          self.blues = [move_point(p,False) for p in self.blues]
          self.greens = [move_point(p, False) for p in self.greens]
          self.player = [move_point(p,True) for p in self.player]
-         self.update_grid()
+         # self.update_grid()
     
     def spawn_point(self, color):
         print(color)
