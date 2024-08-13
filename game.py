@@ -125,7 +125,9 @@ class SnakeGame:
              collided_blues = []
              collided_greens = []
              
-             for grid_point in self.grid[current_cell]:
+             # for grid_point in self.grid[current_cell]:
+             for colors in self.points:
+                for grid_point in colors:
                  # Creates an array to store the food that has to be removed later on
                  if new_point.colliderect(grid_point) and grid_point!=point:
                      if grid_point in self.food:
@@ -176,6 +178,7 @@ class SnakeGame:
          self.update_grid()
     
     def spawn_point(self, color):
+        print(color)
         if color == RED:
             self.reds.append(
                 Point(
