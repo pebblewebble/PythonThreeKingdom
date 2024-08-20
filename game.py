@@ -39,7 +39,7 @@ class Point(pygame.Rect):
 
 
 class SnakeGame:
-    def __init__(self, w=700, h=700):
+    def __init__(self, w=1920, h=1080):
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -69,7 +69,8 @@ class SnakeGame:
                 Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,YELLOW)
                 ]
         self.points = [self.reds, self.blues, self.greens, self.food,self.player]
-        foodToAdd = int(((self.w * self.h) / 5) / 1000 )
+        foodToAdd = int(((self.w * self.h) / 5) / 1000) 
+        # foodToAdd=10
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter+=1
@@ -94,6 +95,21 @@ class SnakeGame:
                 if cell not in self.grid:
                     self.grid[cell] = []
                 self.grid[cell].append(point)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def move_points(self):
          def move_point(point,player):
              x, y, size, color = point.x, point.y, point.width, point.color
@@ -108,6 +124,7 @@ class SnakeGame:
              match direction:
                  case 0:
                      x -= movement_speed 
+                     # point.move()
                  case 1:
                      x += movement_speed 
                  case 2:
