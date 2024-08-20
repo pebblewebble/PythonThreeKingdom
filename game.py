@@ -139,6 +139,7 @@ class SnakeGame:
              if current_cell not in self.grid:
                  self.grid[current_cell]=[]
     
+             # Creates an array to store the food that has to be removed later on
              collided_food = []
              collided_reds = []
              collided_blues = []
@@ -147,8 +148,8 @@ class SnakeGame:
              # for grid_point in self.grid[current_cell]:
              for colors in self.points:
                 for grid_point in colors:
-                 # Creates an array to store the food that has to be removed later on
-                 if new_point.colliderect(grid_point) and grid_point!=point:
+                 #We check for color logic here but there is another check below just in case i guess
+                 if new_point.colliderect(grid_point) and grid_point!=point and grid_point.color!=new_point.color:
                      if grid_point in self.food:
                          collided_food.append(grid_point)
                      elif grid_point in self.reds:
