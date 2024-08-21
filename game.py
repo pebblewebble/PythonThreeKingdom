@@ -69,8 +69,8 @@ class SnakeGame:
                 Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,YELLOW)
                 ]
         self.points = [self.reds, self.blues, self.greens, self.food,self.player]
-        foodToAdd = int(((self.w * self.h) / 5) / 1000) 
-        # foodToAdd=10
+        # foodToAdd = int(((self.w * self.h) / 5) / 1000) 
+        foodToAdd=1000
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter+=1
@@ -96,20 +96,6 @@ class SnakeGame:
                     self.grid[cell] = []
                 self.grid[cell].append(point)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def move_points(self):
          def move_point(point,player):
              x, y, size, color = point.x, point.y, point.width, point.color
@@ -131,8 +117,8 @@ class SnakeGame:
                      y += movement_speed 
                  case 3:
                      y -= movement_speed
-             x = x % self.w
-             y = y % self.h
+             # x = x % self.w
+             # y = y % self.h
              new_point = Point(x, y, size, color)
     
              current_cell = (point.x // CELL_SIZE, point.y // CELL_SIZE)
@@ -144,21 +130,36 @@ class SnakeGame:
              collided_reds = []
              collided_blues = []
              collided_greens = []
+             collided_points=[]
              
              # for grid_point in self.grid[current_cell]:
              for colors in self.points:
                 for grid_point in colors:
                  #We check for color logic here but there is another check below just in case i guess
                  if new_point.colliderect(grid_point) and grid_point!=point and grid_point.color!=new_point.color:
-                     if grid_point in self.food:
-                         collided_food.append(grid_point)
-                     elif grid_point in self.reds:
-                         collided_reds.append(grid_point)
-                     elif grid_point in self.greens:
-                         collided_greens.append(grid_point)
-                     elif grid_point in self.blues:
-                         collided_blues.append(grid_point)
+                     collided_points.append(grid_point)
+                     # if grid_point in self.food:
+                     #     collided_food.append(grid_point)
+                     # elif grid_point in self.reds:
+                     #     collided_reds.append(grid_point)
+                     # elif grid_point in self.greens:
+                     #     collided_greens.append(grid_point)
+                     # elif grid_point in self.blues:
+                     #     collided_blues.append(grid_point)
                 
+             if collided_points:
+                for j in collided_points:
+                 if j.color==WHITE:
+                        self.food.remove(j)
+                 if j.color==RED:  
+                        self.reds.remove(j)
+                 if j.color==BLUE:
+                        self.blues.remove(j)
+                 if j.color==GREEN:
+                        self.greens.remove(j)
+                 self.spawn_point(color)
+
+
              if collided_food:
                  # Keep the food that is not in the array that we just created
                  for food in collided_food:
@@ -168,21 +169,21 @@ class SnakeGame:
                      self.spawn_point(color)
              if collided_reds:
                 for j in collided_reds:
-                    if j.color!=color:
+                    # if j.color!=color:
                         size+=5 
                         print("A red has been eaten! | Total Reds on Screen = "+str(len(self.reds))+" | Eater Color = "+str(color))
                         self.reds.remove(j)
                         self.spawn_point(color)
              if collided_blues:
                  for j in collided_blues:
-                     if j.color!=color:
+                     # if j.color!=color:
                          size+=5
                          print("A blue has been eaten!| Total Blues on Screen = "+str(len(self.blues))+" | Eater Color = "+str(color))
                          self.blues.remove(j)
                          self.spawn_point(color)
              if collided_greens:
                  for j in collided_greens:
-                     if j.color!=color:
+                     # if j.color!=color:
                          size+=5
                          print("A green has been eaten!| Total Greens on Screen = "+str(len(self.greens))+" | Eater Color = "+str(color))
                          self.greens.remove(j)
