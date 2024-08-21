@@ -4,7 +4,6 @@ from enum import Enum
 # from collections import namedtuple
 
 #TO DO LIST
-# 1. I think the grid cell thing might be messing up with some collision where it's not entirely detecting it properly
 # 2. Reinforcement Learning later on
 # 3. I think it sometimes doesn't eat other rect, especially when two rects colliding are moving is because 
 # I am redrwaing them every frame, so according to reddit, it is better to just use the move() method for rects.
@@ -68,7 +67,6 @@ class SnakeGame:
         self.player=[
                 Point(random.randint(0,self.w-1),random.randint(0,self.h-1),10,YELLOW)
                 ]
-        # self.points = [self.reds, self.blues, self.greens, self.food,self.player]
         foodToAdd = int(((self.w * self.h) / 5) / 1000) 
         # foodToAdd=1000
         self.foodCounter = 1
@@ -130,7 +128,6 @@ class SnakeGame:
              collided_reds = []
              collided_blues = []
              collided_greens = []
-             # collided_anomalies= []
              
              # for grid_point in self.grid[current_cell]:
              for grid_point in self.reds+self.greens+self.blues+self.food:
@@ -148,18 +145,7 @@ class SnakeGame:
                          collided_greens.append(grid_point)
                      elif grid_point in self.blues:
                          collided_blues.append(grid_point)
-            #          else:
-            #              collided_anomalies.append(grid_point) 
-            # 
-            #  for anomaly in collided_anomalies:
-            #     if anomaly in self.reds:
-            #         self.reds.remove(anomaly)
-            #     elif anomaly in self.blues:
-            #         self.blues.remove(anomaly)
-            #     elif anomaly in self.greens:
-            #         self.reds.remove(anomaly)
-            #     elif anomaly in self.food:
-            #         self.food.remove(anomaly)
+       
              if collided_food:
                  # Keep the food that is not in the array that we just created
                  for food in collided_food:
@@ -250,14 +236,6 @@ class SnakeGame:
             self.player_direction = 2
         elif keys[pygame.K_UP]:
             self.player_direction = 3
-        elif keys[pygame.K_a]:
-            self.reds=[]
-        elif keys[pygame.K_b]:
-            self.greens=[]
-        elif keys[pygame.K_c]:
-            self.blues=[]
-
-
 
         self.move_points()
         self.update_ui()
