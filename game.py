@@ -130,7 +130,7 @@ class SnakeGame:
              collided_reds = []
              collided_blues = []
              collided_greens = []
-             collided_anomalies= []
+             # collided_anomalies= []
              
              # for grid_point in self.grid[current_cell]:
              for grid_point in self.reds+self.greens+self.blues+self.food:
@@ -148,18 +148,18 @@ class SnakeGame:
                          collided_greens.append(grid_point)
                      elif grid_point in self.blues:
                          collided_blues.append(grid_point)
-                     else:
-                         collided_anomalies.append(grid_point) 
-            
-             for anomaly in collided_anomalies:
-                if anomaly in self.reds:
-                    self.reds.remove(anomaly)
-                elif anomaly in self.blues:
-                    self.blues.remove(anomaly)
-                elif anomaly in self.greens:
-                    self.reds.remove(anomaly)
-                elif anomaly in self.food:
-                    self.food.remove(anomaly)
+            #          else:
+            #              collided_anomalies.append(grid_point) 
+            # 
+            #  for anomaly in collided_anomalies:
+            #     if anomaly in self.reds:
+            #         self.reds.remove(anomaly)
+            #     elif anomaly in self.blues:
+            #         self.blues.remove(anomaly)
+            #     elif anomaly in self.greens:
+            #         self.reds.remove(anomaly)
+            #     elif anomaly in self.food:
+            #         self.food.remove(anomaly)
              if collided_food:
                  # Keep the food that is not in the array that we just created
                  for food in collided_food:
