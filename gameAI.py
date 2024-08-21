@@ -1,4 +1,3 @@
-
 import pygame
 import random
 from enum import Enum
@@ -47,7 +46,6 @@ class SnakeGame:
         pygame.display.set_caption("Three Kingdom")
         self.clock = pygame.time.Clock()
 
-       
         self.grid = {}
         # self.update_grid()
 
@@ -91,8 +89,7 @@ class SnakeGame:
                 )
             )
         self.collision_count = 0
-        self.frame_iteration=0
-
+        self.frame_iteration = 0
 
     def update_grid(self):
         self.grid.clear()
@@ -140,7 +137,9 @@ class SnakeGame:
             collided_player = []
 
             # for grid_point in self.grid[current_cell]:
-            for grid_point in self.reds + self.greens + self.blues + self.food + self.player:
+            for grid_point in (
+                self.reds + self.greens + self.blues + self.food + self.player
+            ):
                 # We check for color logic here but there is another check below just in case i guess
                 if (
                     new_point.colliderect(grid_point)
@@ -163,13 +162,13 @@ class SnakeGame:
                         collided_player.append(grid_point)
             if collided_player:
                 for player in collided_player:
-                    size+=5
+                    size += 5
                     self.player.remove(player)
                     self.spawn_point(color)
             if collided_food:
                 # Keep the food that is not in the array that we just created
                 for food in collided_food:
-                    self.reward = self.reward+5 if player else self.reward 
+                    self.reward = self.reward + 5 if player else self.reward
                     size += 5
                     self.food.remove(food)
                     print(
@@ -182,7 +181,7 @@ class SnakeGame:
             if collided_reds:
                 for j in collided_reds:
                     if j.color != color:
-                        self.reward = self.reward+10 if player else self.reward 
+                        self.reward = self.reward + 10 if player else self.reward
                         size += 5
                         print(
                             "A red has been eaten! | Total Reds on Screen = "
@@ -195,7 +194,7 @@ class SnakeGame:
             if collided_blues:
                 for j in collided_blues:
                     if j.color != color:
-                        self.reward = self.reward+10 if player else self.reward 
+                        self.reward = self.reward + 10 if player else self.reward
                         size += 5
                         print(
                             "A blue has been eaten!| Total Blues on Screen = "
@@ -208,7 +207,7 @@ class SnakeGame:
             if collided_greens:
                 for j in collided_greens:
                     if j.color != color:
-                        self.reward = self.reward+10 if player else self.reward 
+                        self.reward = self.reward + 10 if player else self.reward
                         size += 5
                         print(
                             "A green has been eaten!| Total Greens on Screen = "
@@ -256,23 +255,27 @@ class SnakeGame:
                 )
             )
 
-    def play_step(self,action):
-        self.frame_iteration+=1
+    def play_step(self, action):
+        self.frame_iteration += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-        self.reward=0
-        self.player_direction=action
+        self.reward = 0
+        self.player_direction = action
         self.move_points()
-        
-        #If player is dead
+
+        # If player is dead
         if not self.player:
-            self.reward=-10
-            return self.reward
+            self.reward = -10
+            return self.reward, True, self.reward
 
         self.update_ui()
+        if self.reward < 1000:
+            return self.reward, False, self.reward
+        else:
+            return self.reward, True, self.reward
 
     def update_ui(self):
         self.display.fill((0, 0, 0))
