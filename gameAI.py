@@ -1,3 +1,4 @@
+
 import pygame
 import random
 from enum import Enum
@@ -45,8 +46,13 @@ class SnakeGame:
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption("Three Kingdom")
         self.clock = pygame.time.Clock()
-        self.player_direction = 0
 
+       
+        self.grid = {}
+        # self.update_grid()
+
+    def reset(self):
+        self.player_direction = 0
         self.reds = [
             Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, RED)
         ]
@@ -84,9 +90,9 @@ class SnakeGame:
                     WHITE,
                 )
             )
-        self.test = 0
-        self.grid = {}
-        self.update_grid()
+        self.collision_count = 0
+        self.frame_iteration=0
+
 
     def update_grid(self):
         self.grid.clear()
@@ -143,8 +149,8 @@ class SnakeGame:
                 ):
                     print(grid_point.color, new_point.color)
                     print("COLLIDED")
-                    self.test = self.test + 1
-                    print(self.test)
+                    # self.collision_count = self.collision_count + 1
+                    # print(self.collision_count)
                     if grid_point in self.food:
                         collided_food.append(grid_point)
                     elif grid_point in self.reds:
@@ -163,6 +169,7 @@ class SnakeGame:
             if collided_food:
                 # Keep the food that is not in the array that we just created
                 for food in collided_food:
+                    self.reward = self.reward+5 if player else self.reward 
                     size += 5
                     self.food.remove(food)
                     print(
@@ -175,6 +182,7 @@ class SnakeGame:
             if collided_reds:
                 for j in collided_reds:
                     if j.color != color:
+                        self.reward = self.reward+10 if player else self.reward 
                         size += 5
                         print(
                             "A red has been eaten! | Total Reds on Screen = "
@@ -187,6 +195,7 @@ class SnakeGame:
             if collided_blues:
                 for j in collided_blues:
                     if j.color != color:
+                        self.reward = self.reward+10 if player else self.reward 
                         size += 5
                         print(
                             "A blue has been eaten!| Total Blues on Screen = "
@@ -199,6 +208,7 @@ class SnakeGame:
             if collided_greens:
                 for j in collided_greens:
                     if j.color != color:
+                        self.reward = self.reward+10 if player else self.reward 
                         size += 5
                         print(
                             "A green has been eaten!| Total Greens on Screen = "
@@ -216,7 +226,6 @@ class SnakeGame:
         self.blues = [move_point(p, False) for p in self.blues]
         self.greens = [move_point(p, False) for p in self.greens]
         self.player = [move_point(p, True) for p in self.player]
-        # self.update_grid()
 
     def spawn_point(self, color):
         if color == RED:
@@ -247,31 +256,22 @@ class SnakeGame:
                 )
             )
 
-    def play_step(self):
+    def play_step(self,action):
+        self.frame_iteration+=1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            # elif event.type==pygame.KEYDOWN:
-            #     if event.key==pygame.K_LEFT:
-            #         self.player_direction=0
-            #     elif event.key==pygame.K_RIGHT:
-            #         self.player_direction=1
-            #     elif event.key==pygame.K_DOWN:
-            #         self.player_direction=2
-            #     elif event.key==pygame.K_UP:
-            #         self.player_direction=3
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.player_direction = 0
-        elif keys[pygame.K_RIGHT]:
-            self.player_direction = 1
-        elif keys[pygame.K_DOWN]:
-            self.player_direction = 2
-        elif keys[pygame.K_UP]:
-            self.player_direction = 3
 
+        self.reward=0
+        self.player_direction=action
         self.move_points()
+        
+        #If player is dead
+        if not self.player:
+            self.reward=-10
+            return self.reward
+
         self.update_ui()
 
     def update_ui(self):
