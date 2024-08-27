@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 import random
 from enum import Enum
 
@@ -48,6 +49,7 @@ class SnakeGame:
 
         self.grid = {}
         # self.update_grid()
+        self.reset()
 
     def reset(self):
         self.player_direction = 0
@@ -74,8 +76,8 @@ class SnakeGame:
                 random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, YELLOW
             )
         ]
-        foodToAdd = int(((self.w * self.h) / 5) / 1000)
-        # foodToAdd=1000
+        # foodToAdd = int(((self.w * self.h) / 5) / 1000)
+        foodToAdd=200
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter += 1
@@ -146,8 +148,8 @@ class SnakeGame:
                     and grid_point != point
                     and grid_point.color != new_point.color
                 ):
-                    print(grid_point.color, new_point.color)
-                    print("COLLIDED")
+                    # print(grid_point.color, new_point.color)
+                    # print("COLLIDED")
                     # self.collision_count = self.collision_count + 1
                     # print(self.collision_count)
                     if grid_point in self.food:
@@ -171,24 +173,24 @@ class SnakeGame:
                     self.reward = self.reward + 5 if player else self.reward
                     size += 5
                     self.food.remove(food)
-                    print(
-                        "A food has been eaten! | Total Food on Screen = "
-                        + str(len(self.food))
-                        + " | Eater Color = "
-                        + str(color)
-                    )
+                    # print(
+                    #     "A food has been eaten! | Total Food on Screen = "
+                    #     + str(len(self.food))
+                    #     + " | Eater Color = "
+                    #     + str(color)
+                    # )
                     self.spawn_point(color)
             if collided_reds:
                 for j in collided_reds:
                     if j.color != color:
                         self.reward = self.reward + 10 if player else self.reward
                         size += 5
-                        print(
-                            "A red has been eaten! | Total Reds on Screen = "
-                            + str(len(self.reds))
-                            + " | Eater Color = "
-                            + str(color)
-                        )
+                        # print(
+                        #     "A red has been eaten! | Total Reds on Screen = "
+                        #     + str(len(self.reds))
+                        #     + " | Eater Color = "
+                        #     + str(color)
+                        # )
                         self.reds.remove(j)
                         self.spawn_point(color)
             if collided_blues:
@@ -263,11 +265,13 @@ class SnakeGame:
                 quit()
 
         self.reward = 0
-        self.player_direction = action
+        directions=[0,1,2,3]
+        direction=directions[np.argmax(action)]
+        self.player_direction = direction 
         self.move_points()
 
         # If player is dead
-        if not self.player:
+        if len(self.player)==0:
             self.reward = -10
             return self.reward, True, self.reward
 
@@ -292,8 +296,8 @@ class SnakeGame:
         pygame.display.update()
 
 
-if __name__ == "__main__":
-    game = SnakeGame()
-    # Game Loop
-    while True:
-        game.play_step()
+# if __name__ == "__main__":
+#     game = SnakeGame()
+#     # Game Loop
+#     while True:
+#         game.play_step()
