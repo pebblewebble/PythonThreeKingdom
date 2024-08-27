@@ -53,6 +53,7 @@ class SnakeGame:
 
     def reset(self):
         self.player_direction = 0
+        self.reward = 0
         self.reds = [
             Point(random.randint(0, self.w - 1), random.randint(0, self.h - 1), 10, RED)
         ]
@@ -81,7 +82,7 @@ class SnakeGame:
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter += 1
-            print("Added 1 food | Total Food on Screen = " + str(self.foodCounter))
+            # print("Added 1 food | Total Food on Screen = " + str(self.foodCounter))
             self.food.append(
                 Point(
                     random.randint(0, self.w - 1),
@@ -111,7 +112,8 @@ class SnakeGame:
                 return point
             if player:
                 direction = self.player_direction
-                movement_speed = 5
+                # movement_speed = 5
+                movement_speed = 1
                 self.player_direction = -1
             match direction:
                 case 0:
@@ -198,12 +200,12 @@ class SnakeGame:
                     if j.color != color:
                         self.reward = self.reward + 10 if player else self.reward
                         size += 5
-                        print(
-                            "A blue has been eaten!| Total Blues on Screen = "
-                            + str(len(self.blues))
-                            + " | Eater Color = "
-                            + str(color)
-                        )
+                        # print(
+                        #     "A blue has been eaten!| Total Blues on Screen = "
+                        #     + str(len(self.blues))
+                        #     + " | Eater Color = "
+                        #     + str(color)
+                        # )
                         self.blues.remove(j)
                         self.spawn_point(color)
             if collided_greens:
@@ -211,12 +213,12 @@ class SnakeGame:
                     if j.color != color:
                         self.reward = self.reward + 10 if player else self.reward
                         size += 5
-                        print(
-                            "A green has been eaten!| Total Greens on Screen = "
-                            + str(len(self.greens))
-                            + " | Eater Color = "
-                            + str(color)
-                        )
+                        # print(
+                        #     "A green has been eaten!| Total Greens on Screen = "
+                        #     + str(len(self.greens))
+                        #     + " | Eater Color = "
+                        #     + str(color)
+                        # )
                         self.greens.remove(j)
                         self.spawn_point(color)
 
@@ -264,19 +266,27 @@ class SnakeGame:
                 pygame.quit()
                 quit()
 
-        self.reward = 0
         directions=[0,1,2,3]
         direction=directions[np.argmax(action)]
         self.player_direction = direction 
         self.move_points()
 
+        # print(self.frame_iteration, 500*(self.reward+1))
+
         # If player is dead
+        # if len(self.player)==0 or self.frame_iteration>1000*(self.reward+1):
         if len(self.player)==0:
-            self.reward = -10
+            self.reward += -50
             return self.reward, True, self.reward
 
         self.update_ui()
-        if self.reward < 1000:
+
+        allDead=False
+
+        if len(self.food)==0 and len(self.greens)==0 and len(self.blues)==0 and len(self.reds)==0:
+            allDead=True
+
+        if self.reward < 1000 and not allDead: 
             return self.reward, False, self.reward
         else:
             return self.reward, True, self.reward
