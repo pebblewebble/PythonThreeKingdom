@@ -288,6 +288,62 @@ class SnakeGame:
             pygame.draw.rect(self.display, YELLOW, point)
         pygame.display.update()
 
+    def get_state(self, game):
+        point = game.player[0]
+
+        nearest_food = self.find_nearest(point, game.food)
+        nearest_enemy = self.find_nearest(point, game.reds + game.blues + game.greens)
+
+        state = [
+            # Normalized position of the player's point
+            point.x / game.w,
+            point.y / game.h,
+            # Normalized direction to nearest food
+            (nearest_food.x - point.x) / game.w if nearest_food else 0,
+            (nearest_food.y - point.y) / game.h if nearest_food else 0,
+            # Normalized direction to nearest enemy (regardless of color)
+            (nearest_enemy.x - point.x) / game.w if nearest_enemy else 0,
+            (nearest_enemy.y - point.y) / game.h if nearest_enemy else 0,
+            # Danger in four directions (binary values)
+            self.is_direction_dangerous(game, point, "left"),
+            self.is_direction_dangerous(game, point, "right"),
+            self.is_direction_dangerous(game, point, "up"),
+            self.is_direction_dangerous(game, point, "down"),
+        ]
+
+        return np.array(state, dtype=float)
+
+    def find_nearest(self, point, objects):
+        if not objects:
+            return None
+        nearest = min(objects, key=lambda obj: self.distance(point, obj))
+        return nearest
+
+    def distance(self, point1, point2):
+        return ((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2) ** 0.5
+
+    def is_direction_dangerous(self, game, point, direction):
+        x, y = point.x, point.y
+        size = point.width/2
+        if direction == "left":
+            x -= size
+        elif direction == "right":
+            x += size
+        elif direction == "up":
+            y -= size
+        elif direction == "down":
+            y += size
+
+        # Check if the new position would collide with any enemy
+        for enemy in game.reds + game.blues + game.greens:
+            if pygame.Rect(x, y, point.width, point.height).colliderect(enemy):
+                return 1
+
+        # Check if the new position is out of bounds
+        # if x < 0 or x >= game.w or y < 0 or y >= game.h:
+            # return 1
+
+        return 0
 
 if __name__ == "__main__":
     game = SnakeGame()

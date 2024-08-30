@@ -40,7 +40,7 @@ class Point(pygame.Rect):
 
 
 class SnakeGame:
-    def __init__(self, w=1920, h=1080):
+    def __init__(self, w=1080, h=700):
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -118,7 +118,6 @@ class SnakeGame:
             match direction:
                 case 0:
                     x -= movement_speed
-                    # point.move()
                 case 1:
                     x += movement_speed
                 case 2:
@@ -163,6 +162,7 @@ class SnakeGame:
                     elif grid_point in self.blues:
                         collided_blues.append(grid_point)
                     elif grid_point in self.player:
+                        print(f"A {color} has eaten the player.")
                         collided_player.append(grid_point)
             if collided_player:
                 for player in collided_player:

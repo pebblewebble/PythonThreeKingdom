@@ -58,7 +58,7 @@ class Agent:
 
     def is_direction_dangerous(self, game, point, direction):
         x, y = point.x, point.y
-        size = point.width
+        size = point.width/2
         if direction == "left":
             x -= size
         elif direction == "right":
@@ -70,12 +70,12 @@ class Agent:
 
         # Check if the new position would collide with any enemy
         for enemy in game.reds + game.blues + game.greens:
-            if pygame.Rect(x, y, size, size).colliderect(enemy):
+            if pygame.Rect(x, y, point.width, point.height).colliderect(enemy):
                 return 1
 
         # Check if the new position is out of bounds
-        if x < 0 or x >= game.w or y < 0 or y >= game.h:
-            return 1
+        # if x < 0 or x >= game.w or y < 0 or y >= game.h:
+            # return 1
 
         return 0
 
