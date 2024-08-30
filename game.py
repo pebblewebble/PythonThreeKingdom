@@ -1,7 +1,7 @@
 import pygame
 import random
 from enum import Enum
-
+import numpy as np
 # from collections import namedtuple
 
 # TO DO LIST
@@ -39,7 +39,8 @@ class Point(pygame.Rect):
 
 
 class SnakeGame:
-    def __init__(self, w=1920, h=1080):
+    def __init__(self, w=1080, h=700):
+        self.iteration=0
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -106,7 +107,7 @@ class SnakeGame:
                 return point
             if player:
                 direction = self.player_direction
-                movement_speed = 5
+                movement_speed = 1
                 self.player_direction = -1
             match direction:
                 case 0:
@@ -141,10 +142,10 @@ class SnakeGame:
                     and grid_point != point
                     and grid_point.color != new_point.color
                 ):
-                    print(grid_point.color, new_point.color)
-                    print("COLLIDED")
-                    self.test = self.test + 1
-                    print(self.test)
+                    # print(grid_point.color, new_point.color)
+                    # print("COLLIDED")
+                    # self.test = self.test + 1
+                    # print(self.test)
                     if grid_point in self.food:
                         collided_food.append(grid_point)
                     elif grid_point in self.reds:
@@ -165,47 +166,47 @@ class SnakeGame:
                 for food in collided_food:
                     size += 5
                     self.food.remove(food)
-                    print(
-                        "A food has been eaten! | Total Food on Screen = "
-                        + str(len(self.food))
-                        + " | Eater Color = "
-                        + str(color)
-                    )
+                    # print(
+                    #     "A food has been eaten! | Total Food on Screen = "
+                    #     + str(len(self.food))
+                    #     + " | Eater Color = "
+                    #     + str(color)
+                    # )
                     self.spawn_point(color)
             if collided_reds:
                 for j in collided_reds:
                     if j.color != color:
                         size += 5
-                        print(
-                            "A red has been eaten! | Total Reds on Screen = "
-                            + str(len(self.reds))
-                            + " | Eater Color = "
-                            + str(color)
-                        )
+                        # print(
+                        #     "A red has been eaten! | Total Reds on Screen = "
+                        #     + str(len(self.reds))
+                        #     + " | Eater Color = "
+                        #     + str(color)
+                        # )
                         self.reds.remove(j)
                         self.spawn_point(color)
             if collided_blues:
                 for j in collided_blues:
                     if j.color != color:
                         size += 5
-                        print(
-                            "A blue has been eaten!| Total Blues on Screen = "
-                            + str(len(self.blues))
-                            + " | Eater Color = "
-                            + str(color)
-                        )
+                        # print(
+                        #     "A blue has been eaten!| Total Blues on Screen = "
+                        #     + str(len(self.blues))
+                        #     + " | Eater Color = "
+                        #     + str(color)
+                        # )
                         self.blues.remove(j)
                         self.spawn_point(color)
             if collided_greens:
                 for j in collided_greens:
                     if j.color != color:
                         size += 5
-                        print(
-                            "A green has been eaten!| Total Greens on Screen = "
-                            + str(len(self.greens))
-                            + " | Eater Color = "
-                            + str(color)
-                        )
+                        # print(
+                        #     "A green has been eaten!| Total Greens on Screen = "
+                        #     + str(len(self.greens))
+                        #     + " | Eater Color = "
+                        #     + str(color)
+                        # )
                         self.greens.remove(j)
                         self.spawn_point(color)
 
@@ -272,6 +273,11 @@ class SnakeGame:
             self.player_direction = 3
 
         self.move_points()
+
+        if self.iteration%500==0:
+            print(self.get_state())
+
+        self.iteration=self.iteration+1
         self.update_ui()
 
     def update_ui(self):
@@ -288,8 +294,8 @@ class SnakeGame:
             pygame.draw.rect(self.display, YELLOW, point)
         pygame.display.update()
 
-    def get_state(self, game):
-        point = game.player[0]
+    def get_state(self):
+        point = self.player[0]
 
         nearest_food = self.find_nearest(point, game.food)
         nearest_enemy = self.find_nearest(point, game.reds + game.blues + game.greens)
