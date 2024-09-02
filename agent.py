@@ -7,7 +7,7 @@ from model import Linear_QNet, QTrainer
 from helper import plot
 import pygame
 
-MAX_MEMORY = 500_000
+MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
 LR = 0.01
 
@@ -15,8 +15,8 @@ LR = 0.01
 class Agent:
     def __init__(self):
         self.n_games = 0
-        self.epsilon = 80-self.n_games  # randomness
-        self.gamma = 0.99  # discount rate
+        self.epsilon = 0  # randomness
+        self.gamma = 0.9  # discount rate
         self.memory = deque(maxlen=MAX_MEMORY)  # popleft()
         # 11 is the number of states, 3 is the number of actions we can do
         self.model = Linear_QNet(10, 256, 4)
@@ -106,7 +106,7 @@ class Agent:
             state0 = torch.tensor(state, dtype=torch.float)
             prediction = self.model(state0)
             # Might need to change later
-            move = int(torch.argmax(prediction).item())
+            move = torch.argmax(prediction).item()
             final_move[move] = 1
 
         return final_move
@@ -147,7 +147,7 @@ def train():
 
         state_new = agent.get_state(game)
 
-        # train shrot memory
+        # train short memory
         agent.train_short_memory(state_old, final_move, reward, state_new, done)
 
         # remember
