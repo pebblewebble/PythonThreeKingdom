@@ -78,7 +78,7 @@ class SnakeGame:
             )
         ]
         # foodToAdd = int(((self.w * self.h) / 5) / 1000)
-        foodToAdd=100
+        foodToAdd=70
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter += 1
@@ -172,7 +172,7 @@ class SnakeGame:
             if collided_food:
                 # Keep the food that is not in the array that we just created
                 for food in collided_food:
-                    self.reward = self.reward + 5 if player else self.reward
+                    self.reward = self.reward + 1 if player else self.reward
                     size += 5
                     self.food.remove(food)
                     # print(
