@@ -78,7 +78,7 @@ class SnakeGame:
             )
         ]
         # foodToAdd = int(((self.w * self.h) / 5) / 1000)
-        foodToAdd=200
+        foodToAdd=100
         self.foodCounter = 1
         for x in range(foodToAdd):
             self.foodCounter += 1

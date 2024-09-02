@@ -7,7 +7,7 @@ from model import Linear_QNet, QTrainer
 from helper import plot
 import pygame
 
-MAX_MEMORY = 100_000
+MAX_MEMORY = 500_000
 BATCH_SIZE = 1000
 LR = 0.001
 
@@ -15,7 +15,7 @@ LR = 0.001
 class Agent:
     def __init__(self):
         self.n_games = 0
-        self.epsilon = 80 - self.n_games  # randomness
+        self.epsilon = 80-self.n_games  # randomness
         self.gamma = 0.99  # discount rate
         self.memory = deque(maxlen=MAX_MEMORY)  # popleft()
         # 11 is the number of states, 3 is the number of actions we can do
