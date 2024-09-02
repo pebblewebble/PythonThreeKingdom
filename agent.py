@@ -9,7 +9,7 @@ import pygame
 
 MAX_MEMORY = 500_000
 BATCH_SIZE = 1000
-LR = 0.001
+LR = 0.01
 
 
 class Agent:
