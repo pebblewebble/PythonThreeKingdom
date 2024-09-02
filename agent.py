@@ -20,6 +20,7 @@ class Agent:
         self.memory = deque(maxlen=MAX_MEMORY)  # popleft()
         # 11 is the number of states, 3 is the number of actions we can do
         self.model = Linear_QNet(10, 256, 4)
+        self.model.load()
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
     def get_state(self, game):
