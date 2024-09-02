@@ -102,7 +102,7 @@ class SnakeGame:
         def move_point(point, player):
             x, y, size, color = point.x, point.y, point.width, point.color
             direction = random.randint(0, 3)
-            movement_speed = 1
+            movement_speed = 0
             if player and self.player_direction == -1:
                 return point
             if player:
@@ -112,7 +112,6 @@ class SnakeGame:
             match direction:
                 case 0:
                     x -= movement_speed
-                    # point.move()
                 case 1:
                     x += movement_speed
                 case 2:

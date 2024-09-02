@@ -15,8 +15,8 @@ LR = 0.001
 class Agent:
     def __init__(self):
         self.n_games = 0
-        self.epsilon = 0  # randomness
-        self.gamma = 0.9  # discount rate
+        self.epsilon = 80 - self.n_games  # randomness
+        self.gamma = 0.99  # discount rate
         self.memory = deque(maxlen=MAX_MEMORY)  # popleft()
         # 11 is the number of states, 3 is the number of actions we can do
         self.model = Linear_QNet(10, 256, 4)
@@ -135,7 +135,7 @@ def train():
 
             if score > record:
                 record = score
-                # agent.model.save()
+                agent.model.save()
             print("Game", agent.n_games, "Score", score, "Record:", record)
 
             # Plot
