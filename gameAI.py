@@ -276,12 +276,13 @@ class SnakeGame:
 
         # If player is dead
         # if len(self.player)==0 or self.frame_iteration>1000*(self.reward+1):
-        if self.frame_iteration%5000==0 and self.reward<self.previous_reward:
-            self.reward += -3
-            print("Lost points")
-        else:
-            self.previous_reward=self.reward
-            print("Updated previous rewards")
+        if self.frame_iteration%5000==0:
+            if self.reward<self.previous_reward:
+                self.reward += -3
+                print("Lost points")
+            else:
+                self.previous_reward=self.reward
+                print(f"Updated previous rewards to {self.previous_reward}")
 
         if len(self.player)==0:
             self.reward += -15
