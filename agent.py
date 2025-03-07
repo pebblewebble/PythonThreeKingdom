@@ -8,7 +8,7 @@ from helper import plot
 import pygame
 
 MAX_MEMORY = 100_000
-BATCH_SIZE = 1000
+BATCH_SIZE = 32
 LR = 0.01
 
 
@@ -120,23 +120,32 @@ def train():
     record = 0
     agent = Agent()
     game = SnakeGame()
+
     while True:
-        # get old state
+        # Get old state
         state_old = agent.get_state(game)
 
-        # get move
+        # Get move
         final_move = agent.get_action(state_old)
-        reward, done, score = game.play_step(final_move)
+
+        # Run multiple steps before checking if done
+        for _ in range(3):  # Faster training
+            reward, done, score = game.play_step(final_move)
+            if done:
+                break  # Stop early if the game is over
 
         if done:
-            # train long memory, plot result
             game.reset()
             agent.n_games += 1
-            agent.train_long_memory()
+
+            if agent.n_games % 5 == 0:  # Train every 5 games
+                agent.train_long_memory()
+                agent.model.save()
 
             if score > record:
                 record = score
                 agent.model.save()
+
             print("Game", agent.n_games, "Score", score, "Record:", record)
 
             # Plot
@@ -148,10 +157,11 @@ def train():
 
         state_new = agent.get_state(game)
 
-        # train short memory
-        agent.train_short_memory(state_old, final_move, reward, state_new, done)
+        # Train short memory less frequently (Optional)
+        if agent.n_games % 3 == 0:
+            agent.train_short_memory(state_old, final_move, reward, state_new, done)
 
-        # remember
+        # Remember
         agent.remember(state_old, final_move, reward, state_new, done)
       
 

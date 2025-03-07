@@ -174,7 +174,7 @@ class SnakeGame:
                 # Keep the food that is not in the array that we just created
                 for food in collided_food:
                     self.reward = self.reward + 1 if player else self.reward
-                    size += 5
+                    # size += 5
                     self.food.remove(food)
                     # print(
                     #     "A food has been eaten! | Total Food on Screen = "
@@ -187,7 +187,7 @@ class SnakeGame:
                 for j in collided_reds:
                     if j.color != color:
                         self.reward = self.reward + 10 if player else self.reward
-                        size += 5
+                        # size += 5
                         # print(
                         #     "A red has been eaten! | Total Reds on Screen = "
                         #     + str(len(self.reds))
@@ -200,7 +200,7 @@ class SnakeGame:
                 for j in collided_blues:
                     if j.color != color:
                         self.reward = self.reward + 10 if player else self.reward
-                        size += 5
+                        # size += 5
                         # print(
                         #     "A blue has been eaten!| Total Blues on Screen = "
                         #     + str(len(self.blues))
@@ -213,7 +213,7 @@ class SnakeGame:
                 for j in collided_greens:
                     if j.color != color:
                         self.reward = self.reward + 10 if player else self.reward
-                        size += 5
+                        # size += 5
                         # print(
                         #     "A green has been eaten!| Total Greens on Screen = "
                         #     + str(len(self.greens))
@@ -262,10 +262,11 @@ class SnakeGame:
 
     def play_step(self, action):
         self.frame_iteration += 1
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+        if self.frame_iteration % 10 == 0:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
 
         directions=[0,1,2,3]
         direction=directions[np.argmax(action)]
